@@ -26,9 +26,21 @@ var m = new ModuleExporter;
  *    in, without regard for a company selection. To support this, one might set
  *    `serviceHandler.__requiresCompanyLogin = true` in the handler, and then this
  *    callback can check for that property.
+ *
+ * @returns {Boolean}
  */
 
-
+/**
+ * @callback WebServiceRouter~fnGetUserData
+ *
+ * @param {ExpressRequest} req
+ *    It is assumed that a middleware earlier in the stack has added data to the
+ *    request object for the logged in user.
+ *
+ * @returns {Object}
+ *    Return an object that contains the user data that you want handed into service
+ *    handlers.
+ */
 
 /**
  * @typedef ConfigObject
@@ -46,11 +58,17 @@ var m = new ModuleExporter;
  * @property {WebServiceRouter~fnIsUserLoggedIn} fnIsUserLoggedIn
  *    Pass in a function that will determine whether the user is considered to be
  *    logged in.
+ *
+ * @property {WebServiceRouter~fnGetUserData} fnGetUserData
+ *    Pass in a function that will extract user data from the request object. The
+ *    returned object will get passed as an argument to the `userData` parameter
+ *    in the service handler.
  */
 const DEFAULT_OPTIONS = {
   verbose: false,
   rootServiceRoute: '/services',
-  fnIsUserLoggedIn: __isUserLoggedIn
+  fnIsUserLoggedIn: __isUserLoggedIn,
+  fnGetUserData: __getUserData
 };
 
 
