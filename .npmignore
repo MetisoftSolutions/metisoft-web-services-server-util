@@ -1,0 +1,6 @@
+node_modules/**
+doc/jsdoc/**
+bdp_modules/**
+typings.json
+typings/*
+**.sublime-workspace
