@@ -259,16 +259,15 @@ describe("WebServiceRouter suite", function() {
           return test.userIsLoggedIn;
         };
         
-        function getUserData(req) {
+        options.fnGetUserData = function (req) {
           return {};
         }
         
         WebServiceRouter.__test.__DI__setupRouteForService(
-          test.options,
+          options,
           WebServiceRouter.__test.__makeRouteToService,
           app,
           console,
-          getUserData,
           
           test.modelName,
           test.funcName,

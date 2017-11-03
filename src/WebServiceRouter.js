@@ -245,16 +245,16 @@ m.$$private(__getUserData);
  * @param {Function} makeRouteToService
  * @param {Express} app
  * @param {console} console
- * @param {Function} fnGetUserData
  * @param {String} modelName
  * @param {String} funcName
  * @param {Object} modelApi
  */
-function __DI__setupRouteForService(options, makeRouteToService, app, console, fnGetUserData, modelName, funcName, modelApi) {
+function __DI__setupRouteForService(options, makeRouteToService, app, console, modelName, funcName, modelApi) {
   var func = modelApi[funcName],
       route,
       verbose = options.verbose,
       fnIsLoggedIn,
+      fnGetUserData,
       requiresUserLogin = true;
 
   if (_.isBoolean(func.__requiresUserLogin)) {
@@ -267,6 +267,12 @@ function __DI__setupRouteForService(options, makeRouteToService, app, console, f
     fnIsLoggedIn = function loginCheckPassThrough() {
       return true;
     };
+  }
+
+  if (options.fnGetUserData && _.isFunction(options.fnGetUserData)) {
+    fnGetUserData = options.fnGetUserData;
+  } else {
+    fnGetUserData = __getUserData;
   }
 
   if (func && _.isFunction(func)) {
@@ -334,7 +340,6 @@ WebServiceRouter.prototype.__setupRouteForService = function __setupRouteForServ
     __makeRouteToService,
     this.__app,
     console,
-    __getUserData,
     
     modelName,
     funcName,
