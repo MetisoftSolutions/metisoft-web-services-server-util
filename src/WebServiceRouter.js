@@ -243,7 +243,7 @@ function __DI__setupRouteForService(options, makeRouteToService, app, console, f
     requiresUserLogin = func.__requiresUserLogin;
   }
 
-  if (requiresUserLogin && options.fnIsUserLoggedIn && _.isFunc(options.fnIsUserLoggedIn)) {
+  if (requiresUserLogin && options.fnIsUserLoggedIn && _.isFunction(options.fnIsUserLoggedIn)) {
     fnIsLoggedIn = options.fnIsUserLoggedIn;
   } else {
     fnIsLoggedIn = function loginCheckPassThrough() {
