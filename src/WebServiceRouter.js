@@ -11,9 +11,11 @@ var m = new ModuleExporter;
 /**
  * @callback WebServiceRouter~fnIsUserLoggedIn
  *
- * @param {ExpressRequest} req
+ * @param {Request} req
+ * 
+ * @param {Response} res
  *    It is assumed that a middleware earlier in the stack has added data to the
- *    request object for the logged in user.
+ *    `res.locals` object somewhere for the logged in user.
  *
  * @param {Function} serviceHandler
  *    Some service handlers have properties attached to them that might affect how
@@ -33,7 +35,11 @@ var m = new ModuleExporter;
 /**
  * @callback WebServiceRouter~fnGetUserData
  *
- * @param {ExpressRequest} req
+ * @param {Request} req
+ *    It is assumed that a middleware earlier in the stack has added data to the
+ *    request object for the logged in user.
+ * 
+ * @param {Response} res
  *    It is assumed that a middleware earlier in the stack has added data to the
  *    request object for the logged in user.
  *
@@ -74,18 +80,21 @@ const DEFAULT_OPTIONS = {
 
 
 /**
- * Returns `true` if the request object has data that indicates that the user has
+ * Returns `true` if the response object has data that indicates that the user has
  * logged in.
  *
  * @private
  * @memberof WebServiceRouter
  *
- * @param {ExpressReq} req
+ * @param {Request} req
+ * @param {Response} res
+ * @param {Function} serviceHandler
  * @returns {Boolean}
  */
-function __isUserLoggedIn(req) {
-  return !!(req.user &&
-            req.user.username);
+function __isUserLoggedIn(req, res, serviceHandler) {
+  return !!(res.locals.metisoft &&
+            res.locals.metisoft.user &&
+            res.locals.metisoft.user.username);
 }
 m.$$private(__isUserLoggedIn);
 
@@ -216,15 +225,16 @@ m.$$private(__makeRouteToService);
  *
  * @private
  * @memberof WebServiceRouter
- * @param {ExpressReq} req
+ * @param {Request} req
+ * @param {Response} res
  *
  * @returns {WebServiceRouter~UserData}
  */
-function __getUserData(req) {
+function __getUserData(req, res) {
   var userData = {};
 
-  userData.userId = req.user.id;
-  userData.username = req.user.username;
+  userData.userId = res.locals.metisoft.user.id;
+  userData.username = res.locals.metisoft.user.username;
 
   if (req.session) {
     userData.session = req.session;
@@ -279,7 +289,7 @@ function __DI__setupRouteForService(options, makeRouteToService, app, console, m
     route = makeRouteToService(options.rootServiceRoute, modelName, funcName);
 
     app.post(route, function(req, res) {
-      if (!fnIsLoggedIn(req, func)) {
+      if (!fnIsLoggedIn(req, res, func)) {
         res.send({});
         return;
       }
@@ -288,7 +298,7 @@ function __DI__setupRouteForService(options, makeRouteToService, app, console, m
         console.log(sprintf('Service "%s" being called; invoking %s.%s', route, modelName, func.name));
       }
 
-      func(fnGetUserData(req), req.body)
+      func(fnGetUserData(req, res), req.body)
 
         .then(function(retObj) {
           res.send(retObj);
@@ -417,7 +427,7 @@ function __DI__setupAllModelServices(fs, require, createService, options, consol
     var stat = fs.statSync(pathToFile),
         model, modelName;
 
-    if (stat.isFile() && filename.slice(-3) === '.js') {
+    if (stat.isFile() && __isJsOrTsFile(filename)) {
       modelName = filename.split('.')[0];
       model = require(pathToFile);
       if (model && model.__exportsToClient) {
@@ -429,6 +439,14 @@ function __DI__setupAllModelServices(fs, require, createService, options, consol
   });
 }
 m.$$private(__DI__setupAllModelServices);
+
+
+
+function __isJsOrTsFile(filename) {
+  var ext = filename.slice(-3);
+  return (ext === '.js' || ext === '.ts');
+}
+m.$$private(__isJsOrTsFile);
 
 
 

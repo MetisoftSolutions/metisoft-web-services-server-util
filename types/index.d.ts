@@ -10,13 +10,24 @@ export declare interface ConfigObject {
 export declare interface fnIsUserLoggedIn {
   (
     req: express.Request,
-    serviceHandler?: Function
+    res: express.Response,
+    serviceHandler?: fnServiceHandler
   ): boolean;
+}
+
+export declare interface fnServiceHandler {
+  (
+    userData: object,
+    args: object,
+    client: object
+  ): any;
+  [propName: string]: any
 }
 
 export declare interface fnGetUserData {
   (
-    req: express.Request
+    req: express.Request,
+    res: express.Response
   ): Object;
 }
 
