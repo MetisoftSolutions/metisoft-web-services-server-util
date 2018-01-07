@@ -307,7 +307,9 @@ function __DI__setupRouteForService(options, makeRouteToService, app, console, m
         .catch(function(err) {
           var errorToSend;
 
-          if (err.hasOwnProperty('__errorToSend')) {
+          if (err.message && typeof(err.message) === 'string') {
+            errorToSend = err.message;
+          } else if (err.hasOwnProperty('__errorToSend')) {
             errorToSend = err.__errorToSend;
           } else {
             errorToSend = err;
