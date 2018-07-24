@@ -1,5 +1,8 @@
-To generate documentation: `npm run genDocs`
+# metisoft-web-services-server-util
 
-To run tests: `npm test`
+Version 3 is a rewrite in TypeScript. It is not backwards compatible with earlier versions.
 
-If mocha isn't installed, you'll need to run `npm install -g mocha`.
+To set up the router, use the `WebServiceRouter` from:
+```
+import { WebServiceRouter } from 'metisoft-web-services-server-util';
+```

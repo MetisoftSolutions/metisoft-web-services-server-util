@@ -1,25 +1,32 @@
 {
   "name": "metisoft-web-services-server-util",
   "description": "Metisoft, LLC - Web services server utilities",
-  "version": "2.0.3",
-  "main": "./index.js",
-  "types": "./types/index.d.ts",
+  "version": "3.0.0",
+  "main": "./build/WebServiceRouter.js",
+  "types": "./build/WebServiceRouter.d.ts",
   "author": "James Brawn, Jr.",
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.4.0",
+    "@types/bluebird": "^3.5.22",
+    "@types/sprintf-js": "^1.1.0",
+    "bluebird": "^3.5.1",
     "chai": "^3.5.0",
     "express": "^4.16.3",
     "lodash": "^4.17.10",
-    "metisoft-module-exporter": "https://github.com/MetisoftSolutions/metisoft-module-exporter.git",
     "mocha": "^5.2.0",
     "sinon": "^1.17.4",
-    "sprintf-js": "^1.0.3"
+    "sprintf-js": "^1.1.1"
   },
   "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/lodash": "^4.14.112",
+    "@types/node": "^10.5.2",
+    "@types/pg": "^7.4.10",
+    "@types/pg-pool": "0.0.3",
     "jsdoc": "^3.4.0",
-    "minami": "^1.1.1"
+    "minami": "^1.1.1",
+    "typescript": "^2.9.2"
   },
   "scripts": {
     "genDocs": "jsdoc src/ -p -r --verbose -t node_modules/minami -d doc/jsdoc -c doc/conf.json --tutorials doc/tutorials",
