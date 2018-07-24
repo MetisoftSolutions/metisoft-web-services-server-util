@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as fs from 'fs';
 import * as express from 'express';
 import * as pg from 'pg';
+import { Promise } from 'es6-promise';
 
 
 

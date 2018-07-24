@@ -9,8 +9,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = __importStar(require("lodash"));
 const fs = __importStar(require("fs"));
+const es6_promise_1 = require("es6-promise");
 const __defaultIsUserLoggedIn = (req, res, serviceHandler) => {
-    return Promise.resolve(!!(res.locals.metisoft &&
+    return es6_promise_1.Promise.resolve(!!(res.locals.metisoft &&
         res.locals.metisoft.user &&
         res.locals.metisoft.user.username));
 };
@@ -19,7 +20,7 @@ const __defaultGetUserData = (req, res) => {
         id: res.locals.metisoft.user.id,
         username: res.locals.metisoft.user.username
     };
-    return Promise.resolve(userData);
+    return es6_promise_1.Promise.resolve(userData);
 };
 function __removeLeadingAndTrailingSlashes(str) {
     while (str.length > 0 && str.slice(-1) === '/') {
