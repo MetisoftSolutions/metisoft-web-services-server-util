@@ -1,7 +1,7 @@
 {
   "name": "metisoft-web-services-server-util",
   "description": "Metisoft, LLC - Web services server utilities",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "./build/WebServiceRouter.js",
   "types": "./build/WebServiceRouter.d.ts",
   "author": "James Brawn, Jr.",

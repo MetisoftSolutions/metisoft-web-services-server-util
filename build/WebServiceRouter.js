@@ -77,17 +77,20 @@ class WebServiceRouter {
             if (func && _.isFunction(func)) {
                 const route = __makeRouteToService(options.rootServiceRoute, modelName, funcName);
                 this.__app.post(route, (req, res) => {
-                    if (!fnIsLoggedIn(req, res, func)) {
-                        res.status(400).send({
-                            errorCode: 'NOT_LOGGED_IN',
-                            errorMessage: "User is not logged in."
-                        });
-                        return;
-                    }
-                    if (options.verbose) {
-                        console.log(`Service "${route}" is being called; invoking ${modelName}.${funcName}`);
-                    }
-                    func(fnGetUserData(req, res), req.body)
+                    fnIsLoggedIn(req, res, func)
+                        .then((isLoggedIn) => {
+                        if (!isLoggedIn && requiresUserLogin) {
+                            res.status(400).send({
+                                errorCode: 'NOT_LOGGED_IN',
+                                errorMessage: "User is not logged in."
+                            });
+                            return;
+                        }
+                        if (options.verbose) {
+                            console.log(`Service "${route}" is being called; invoking ${modelName}.${funcName}`);
+                        }
+                        return func(fnGetUserData(req, res), req.body);
+                    })
                         .then((retObj) => {
                         res.send(retObj);
                     })
