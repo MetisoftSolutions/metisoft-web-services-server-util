@@ -160,7 +160,11 @@ export class WebServiceRouter<TUserData> {
               console.log(`Service "${route}" is being called; invoking ${modelName}.${funcName}`);
             }
 
-            return func(fnGetUserData(req, res), req.body);
+            return fnGetUserData(req, res);
+          })
+
+          .then((userData: TUserData) => {
+            return func(userData, req.body);
           })
 
           .then((retObj) => {

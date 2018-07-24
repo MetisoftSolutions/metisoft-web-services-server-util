@@ -89,7 +89,10 @@ class WebServiceRouter {
                         if (options.verbose) {
                             console.log(`Service "${route}" is being called; invoking ${modelName}.${funcName}`);
                         }
-                        return func(fnGetUserData(req, res), req.body);
+                        return fnGetUserData(req, res);
+                    })
+                        .then((userData) => {
+                        return func(userData, req.body);
                     })
                         .then((retObj) => {
                         res.send(retObj);
