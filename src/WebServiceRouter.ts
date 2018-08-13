@@ -151,8 +151,10 @@ export class WebServiceRouter<TUserData> {
           .then((isLoggedIn: boolean) => {
             if (!isLoggedIn && requiresUserLogin) {
               res.status(400).send({
-                errorCode: 'NOT_LOGGED_IN',
-                errorMessage: "User is not logged in."
+                error: {
+                  code: 'NOT_LOGGED_IN',
+                  message: "User is not logged in."
+                }
               });
               return;
             }
@@ -174,20 +176,20 @@ export class WebServiceRouter<TUserData> {
 
           .catch((err) => {
             const errorToSend = {
-              code: '',
-              message: ''
+              error: {
+                code: '',
+                message: ''
+              }
             };
 
-            if (err._code && err._message) {
-              errorToSend.code = err._code;
-              errorToSend.message = err._message;
+            if (err.hasOwnProperty('code') && err.hasOwnProperty('message')) {
+              errorToSend.error.code = err._code;
+              errorToSend.error.message = err._message;
             } else {
-              errorToSend.message = err.message;
+              errorToSend.error.message = err.message;
             }
 
-            res.status(400).send({
-              error: errorToSend
-            });
+            res.status(400).send(errorToSend);
 
             console.log(err);
             console.log(err.stack);
