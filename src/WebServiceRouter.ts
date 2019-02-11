@@ -87,6 +87,12 @@ function __isJsOrTsFile(fileName: string) {
 
 
 
+function __isTestFile(fileName: string) {
+  return _.includes(fileName, '.spec.');
+}
+
+
+
 export class WebServiceRouter<TUserData> {
 
   private __app: express.Application;
@@ -215,7 +221,7 @@ export class WebServiceRouter<TUserData> {
       let modelApi: any;
       let modelName: string;
 
-      if (stat.isFile() && __isJsOrTsFile(fileName) && !fileName.startsWith('_')) {
+      if (stat.isFile() && __isJsOrTsFile(fileName) && !fileName.startsWith('_') && !__isTestFile(fileName)) {
         modelName = fileName.split('.')[0];
         modelApi = require(pathToFile);
 
@@ -234,6 +240,6 @@ export class WebServiceRouter<TUserData> {
         this.__setUpRouteForService(modelName, funcName, func);
       }
     });
-  }
+  };
 
 }

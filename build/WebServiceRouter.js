@@ -44,6 +44,9 @@ function __isJsOrTsFile(fileName) {
     const ext = fileName.slice(-3);
     return (ext === '.js' || ext === '.ts');
 }
+function __isTestFile(fileName) {
+    return _.includes(fileName, '.spec.');
+}
 class WebServiceRouter {
     constructor(app, configOptions) {
         this.__defaultOptions = {
@@ -82,8 +85,10 @@ class WebServiceRouter {
                         .then((isLoggedIn) => {
                         if (!isLoggedIn && requiresUserLogin) {
                             res.status(400).send({
-                                errorCode: 'NOT_LOGGED_IN',
-                                errorMessage: "User is not logged in."
+                                error: {
+                                    code: 'NOT_LOGGED_IN',
+                                    message: "User is not logged in."
+                                }
                             });
                             return;
                         }
@@ -100,19 +105,19 @@ class WebServiceRouter {
                     })
                         .catch((err) => {
                         const errorToSend = {
-                            code: '',
-                            message: ''
+                            error: {
+                                code: '',
+                                message: ''
+                            }
                         };
-                        if (err._code && err._message) {
-                            errorToSend.code = err._code;
-                            errorToSend.message = err._message;
+                        if (err.hasOwnProperty('code') && err.hasOwnProperty('message')) {
+                            errorToSend.error.code = err._code;
+                            errorToSend.error.message = err._message;
                         }
                         else {
-                            errorToSend.message = err.message;
+                            errorToSend.error.message = err.message;
                         }
-                        res.status(400).send({
-                            error: errorToSend
-                        });
+                        res.status(400).send(errorToSend);
                         console.log(err);
                         console.log(err.stack);
                     });
@@ -130,7 +135,7 @@ class WebServiceRouter {
                 const stat = fs.statSync(pathToFile);
                 let modelApi;
                 let modelName;
-                if (stat.isFile() && __isJsOrTsFile(fileName) && !fileName.startsWith('_')) {
+                if (stat.isFile() && __isJsOrTsFile(fileName) && !fileName.startsWith('_') && !__isTestFile(fileName)) {
                     modelName = fileName.split('.')[0];
                     modelApi = require(pathToFile);
                     if (modelApi) {
