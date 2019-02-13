@@ -188,7 +188,7 @@ export class WebServiceRouter<TUserData> {
               }
             };
 
-            if (err.hasOwnProperty('code') && err.hasOwnProperty('message')) {
+            if (err.hasOwnProperty('_code') && err.hasOwnProperty('_message')) {
               errorToSend.error.code = err._code;
               errorToSend.error.message = err._message;
             } else {
